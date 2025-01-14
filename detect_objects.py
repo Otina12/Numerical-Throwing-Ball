@@ -34,8 +34,8 @@ class ObjectDetector:
             if cluster_points.size == 0:
                 continue
 
-            y_min, x_min = cluster_points.min(axis=0)
-            y_max, x_max = cluster_points.max(axis=0)
+            y_min, x_min = cluster_points.min(axis = 0)
+            y_max, x_max = cluster_points.max(axis = 0)
 
             center = ((y_min + y_max) // 2, (x_min + x_max) // 2)
             radius = max(x_max - x_min, y_max - y_min) // 2
@@ -44,8 +44,23 @@ class ObjectDetector:
                 'center': tuple(center),
                 'radius': int(radius),
             })
+        
+        # DBSCAN deals with touching edges, but it doesn't work (if epsilon is not big enough) when one object is inside another, so we need to remove inner balls and only leave outer ones.
+        filtered_objects = []
+        for i, obj1 in enumerate(objects):
+            is_inside = False
+            
+            for j, obj2 in enumerate(objects):
+                if i != j:
+                    distance = np.linalg.norm(np.array(obj1['center']) - np.array(obj2['center']))
+                    if distance + obj1['radius'] <= obj2['radius']:
+                        is_inside = True
+                        break
+                    
+            if not is_inside:
+                filtered_objects.append(obj1)
 
-        return objects
+        return filtered_objects
 
     def to_grayscale(self):
         r = self.image[:, :, 0].astype(np.float64)
