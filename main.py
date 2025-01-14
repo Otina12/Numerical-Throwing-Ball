@@ -9,7 +9,7 @@ video_scale_factor = 0.5 # we need this now to calculate ball radius and find ov
 
 # ================================= Step 1: Image =================================
 # Option 1: Test on your image
-image_path = r'Final-Project\Project-1_Hitting_Target\assets\test3.png'
+image_path = r'Final-Project\Project-1_Hitting_Target\assets\test1.png'
 image = Image.open(image_path)
 width, height = image.size
 ball_radius = int((min(width, height) // 30) * video_scale_factor) # don't change this, since animation uses same size as well
@@ -45,7 +45,7 @@ bvp_solver = BVPSolver(g, time, ball_radius)
 x0 = random.randint(0, width - 1)
 y0 = random.randint(0, height - 1)
 
-x0, y0 = 0, 0 # for document's examples (comment this for random start point)
+x0, y0 = 258, 411 # for document's examples (comment this for random start point)
 
 print(f'Shooting from point ({x0}, {y0}):')
 trajectories, sorted_targets = bvp_solver.shooting_method(targets, (x0, y0))
@@ -58,4 +58,4 @@ ball_path = r'Final-Project\Project-1_Hitting_Target\assets\ball.png'
 animation_name = f'throwing_ball_{time}s'
 
 ball_animation = BallThrowingAnimation((x0, y0), width, target_path, ball_path, scale_factor = video_scale_factor)
-ball_animation.animate(targets, trajectories, output_path = fr'Final-Project\aaaa.mp4')#, output_path = fr'Final-Project\Project-1_Hitting_Target\output\g={g}\{animation_name}.mp4')
+ball_animation.animate(targets, trajectories)#, output_path = fr'Final-Project\Project-1_Hitting_Target\output\g={g}\{animation_name}.mp4')
